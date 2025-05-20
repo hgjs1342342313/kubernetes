@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档导航页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .doc-list {
+            list-style: none;
+            padding: 0;
+        }
+        .doc-list li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .doc-list li:hover {
+            background-color: #f0f0f0;
+        }
+        a {
+            color: #2196F3;
+            text-decoration: none;
+            display: block;
+        }
+        a:hover {
+            color: #1976D2;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #content-frame {
+            width: 100%;
+            min-height: 500px;
+            border: none;
+            margin-top: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>文档导航</h1>
+        <select id="pageSelector" onchange="loadContent()">
+            <option value="">请选择要查看的文档...</option>
+            <!-- 动态加载选项 -->
+        </select>
+        <iframe id="content-frame"></iframe>
+    </div>
+
+    <script>
+        function loadContent() {
+            const selector = document.getElementById('pageSelector');
+            const frame = document.getElementById('content-frame');
+            if (selector.value) {
+                frame.src = selector.value;
+            }
+        }
+
+        // 使用JavaScript动态加载HTML文件列表
+        async function listHtmlFiles() {
+            try {
+                const response = await fetch('http://localhost:3000/list-html-files');
+                const files = await response.json();
+                const selector = document.getElementById('pageSelector');
+                
+                files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file;
+                    option.textContent = file.replace('.html', '');
+                    selector.appendChild(option);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // 页面加载时调用函数
+        listHtmlFiles();
+    </script>
+</body>
+</html>
