@@ -40,3 +40,14 @@ jobs:
 
       - name: Run tests
         run: deno test -A
+
+      - name: Check HTML and viewed directories file count
+        run: |
+          HTML_COUNT=$(find HTML -type f | wc -l)
+          VIEWED_COUNT=$(find 看完的 -type f | wc -l)
+          TOTAL_COUNT=$((HTML_COUNT + VIEWED_COUNT))
+          echo "Total files in HTML and 看完的 directories: $TOTAL_COUNT"
+          if [ "$TOTAL_COUNT" -ne 54 ]; then
+            echo "Error: Expected 54 files, but found $TOTAL_COUNT."
+            exit 1
+          fi
